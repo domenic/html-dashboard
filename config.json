@@ -4,7 +4,6 @@
   "gitHub": {
     "scopes": "",
     "clientId": "f6d2e811b0f087ef0daf",
-    "clientSecret": "HnqMnPyrbZJEc9bYeRlbncvmxSeyMiD6",
     "redirectRoute": "/github-oauth",
     "redirectURL": "http://localhost:1337/github-oauth",
     "cookie": "gitHubAccessToken",
