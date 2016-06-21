@@ -1,0 +1,40 @@
+{
+  "name": "html-dashboard",
+  "private": true,
+  "description": "A dashboard for issue and pull request management in whatwg/html",
+  "keywords": [],
+  "version": "1.0.0-pre",
+  "author": "Domenic Denicola <d@domenic.me> (https://domenic.me/)",
+  "license": "WTFPL",
+  "repository": "domenic/html-dashboard",
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint .",
+    "build": "gulp build",
+    "watch": "gulp watch",
+    "gulp": "gulp",
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "cookies-js": "^1.2.2",
+    "koa-no-cache": "^1.1.0",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0",
+    "sw-toolbox": "^3.2.1"
+  },
+  "devDependencies": {
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "eslint": "^2.13.1",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-stylus": "^2.4.0",
+    "mocha": "^2.5.3",
+    "rimraf": "^2.5.2",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}

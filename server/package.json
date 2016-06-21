@@ -1,0 +1,19 @@
+{
+  "name": "comic-reader-server",
+  "private": true,
+  "description": "An experimental comic book reader's server",
+  "version": "1.0.0-pre",
+  "author": "Domenic Denicola <d@domenic.me> (https://domenic.me/)",
+  "license": "WTFPL",
+  "scripts": {
+    "server": "node server.js"
+  },
+  "dependencies": {
+    "http-errors": "^1.3.1",
+    "koa": "^1.1.2",
+    "koa-router": "^5.3.0",
+    "koa-static": "^1.5.2",
+    "requisition": "^1.5.1"
+  },
+  "devDependencies": {}
+}

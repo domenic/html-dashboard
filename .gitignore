@@ -1,0 +1,11 @@
+/node_modules/
+/npm-debug.log
+
+/config-private.json
+
+/www/bundle.js
+/www/service-worker-bundle.js
+/www/styles.css
+
+/server/node_modules/
+/server/npm-debug.log
