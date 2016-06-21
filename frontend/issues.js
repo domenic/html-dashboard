@@ -1,20 +1,22 @@
 "use strict";
 
+// Implements a subset of filters from https://help.github.com/articles/searching-issues/
+// This may not be a good idea...
+
+const filters = {
+  is: issueMatchesIs,
+  label: issueMatchesLabel,
+  no: issueMatchesNo
+};
+
 exports.filter = (issues, filterString) => {
   const filtered = [];
   const parsedFilter = parseFilter(filterString);
 
   issueLoop: for (const issue of issues) {
     for (const key of Object.keys(parsedFilter)) {
-      if (key === "is") {
-        if (!issueMatchesIs(issue, parsedFilter[key])) {
-          continue issueLoop;
-        }
-      }
-      if (key === "label") {
-        if (!issueMatchesLabel(issue, parsedFilter[key])) {
-          continue issueLoop;
-        }
+      if (!filters[key](issue, parsedFilter[key])) {
+        continue issueLoop;
       }
     }
 
@@ -25,16 +27,16 @@ exports.filter = (issues, filterString) => {
 };
 
 function issueMatchesIs(issue, isFilter) {
+  return issueMatchesIsType(issue, isFilter) && issueMatchesIsState(issue, isFilter);
+}
+
+function issueMatchesIsType(issue, isFilter) {
   const isPR = Boolean(issue.pull_request);
-  const state = issue.state;
 
   if (isPR && isFilter.negative.includes("pr")) {
     return false;
   }
   if (!isPR && isFilter.negative.includes("issue")) {
-    return false;
-  }
-  if (isFilter.negative.includes(state)) {
     return false;
   }
 
@@ -44,17 +46,28 @@ function issueMatchesIs(issue, isFilter) {
   if (!isPR && isFilter.positive.includes("issue")) {
     return true;
   }
+
+  return false;
+}
+
+function issueMatchesIsState(issue, isFilter) {
+  const state = issue.state;
+
+  if (isFilter.negative.includes(state)) {
+    return false;
+  }
+
   if (isFilter.positive.includes(state)) {
     return true;
   }
 
-  return false;
+  return isFilter.positive.length === 0;
 }
 
 function issueMatchesLabel(issue, labelFilter) {
   const issueLabels = issue.labels.map(obj => obj.name);
 
-  if (arraysIntersect(labelFilter.negative, issueLabels)) {
+  if (labelFilter.negative.length > 0 && issueLabels.length > 0 && arraysIntersect(labelFilter.negative, issueLabels)) {
     return false;
   }
   if (arraysIntersect(labelFilter.positive, issueLabels)) {
@@ -64,8 +77,22 @@ function issueMatchesLabel(issue, labelFilter) {
   return false;
 }
 
+function issueMatchesNo(issue, noFilter) {
+  if (noFilter.negative.length > 0) {
+    throw new Error("Unexpected negative no filter");
+  }
+
+  for (const no of noFilter.positive) {
+    if (issue[no] !== null) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function parseFilter(filterString) {
-  const pieceRegexp = /(-?)([a-z]+):([^ ]+|"[^"]+")/g;
+  const pieceRegexp = /(-?)([a-z]+):([^ "]+|"[^"]+")/g;
 
   const parsed = Object.create(null);
 
