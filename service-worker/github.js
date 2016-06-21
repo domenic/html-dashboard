@@ -1,10 +1,13 @@
 "use strict";
 
-module.exports = function gitHubRequest(path, token) {
-  return fetch("https://api.github.com/" + path, {
+module.exports = function gitHubRequest(pathOrURL, token) {
+  if (!pathOrURL.startsWith("https:")) {
+    pathOrURL = "https://api.github.com/" + pathOrURL;
+  }
+
+  return fetch(pathOrURL, {
     headers: {
       Authorization: "token " + token
     }
-  })
-  .then(r => r.json());
+  });
 };

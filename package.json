@@ -18,6 +18,7 @@
   "dependencies": {
     "cookies-js": "^1.2.2",
     "koa-no-cache": "^1.1.0",
+    "parse-link-header": "^0.4.1",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
