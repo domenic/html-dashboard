@@ -2,7 +2,7 @@
 const React = require("react");
 
 module.exports = props => (
-  <section className="git-hub-sign-in">
+  <section className="github-sign-in">
     {
       props.signedIn ?
         <p>Signed in to GitHub</p>

@@ -1,5 +1,6 @@
 {
   "port": "1337",
+  "repo": "whatwg/html",
   "gitHub": {
     "scopes": "",
     "clientId": "f6d2e811b0f087ef0daf",

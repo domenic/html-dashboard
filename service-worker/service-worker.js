@@ -2,6 +2,7 @@
 const swToolbox = require("sw-toolbox");
 const parseLinkHeader = require("parse-link-header");
 const gitHub = require("./github.js");
+const config = require("../config.json");
 
 const CACHE_NAME = "v1";
 
@@ -23,7 +24,7 @@ function fetchAndCacheIssues(request, accessToken) {
 }
 
 function fetchIssues(accessToken) {
-  return gitHub("repos/whatwg/html/issues", accessToken).then(firstResponse => {
+  return gitHub(`repos/${config.repo}/issues`, accessToken).then(firstResponse => {
     const links = parseLinkHeader(firstResponse.headers.get("link"));
     const nextPage = Number(links.next.page);
     const lastPage = Number(links.last.page);
