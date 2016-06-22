@@ -29,8 +29,11 @@ class App extends React.Component {
                          description="Unassigned bugs"
                          filter='is:issue is:open -label:addition/proposal -label:"needs implementor interest" no:assignee' />
               <IssueList issues={issues}
-                         description="Assigned to you"
+                         description="Assigned to me"
                          filter={`is:open assignee:${gitHub.username}`} />
+              <IssueList issues={issues}
+                         description="Additions/proposals"
+                         filter={`is:issue is:open label:addition/proposal`} />
             </div>
           :
           <p className="sign-in-reminder">Sign in (click the button in the upper right) to see the dashboard.</p>

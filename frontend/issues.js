@@ -70,7 +70,7 @@ function issueMatchesIsState(issue, isFilter) {
 
 function issueMatchesLabel(issue, labelFilter) {
   const labels = issue.labels.map(obj => obj.name);
-  return multipleMatcherHelper(labels, labelFilter, { requirePositiveMatches: false });
+  return multipleMatcherHelper(labels, labelFilter);
 }
 
 function issueMatchesNo(issue, noFilter) {
@@ -90,14 +90,14 @@ function issueMatchesNo(issue, noFilter) {
 function issueMatchesAssignee(issue, assigneeFilter) {
   const assignees = issue.assignees.map(obj => obj.login);
   console.log("assignees", assignees);
-  return multipleMatcherHelper(assignees, assigneeFilter, { requirePositiveMatches: true });
+  return multipleMatcherHelper(assignees, assigneeFilter);
 }
 
-function multipleMatcherHelper(candidates, filter, { requirePositiveMatches }) {
+function multipleMatcherHelper(candidates, filter) {
   if (filter.negative.length > 0 && candidates.length > 0 && arraysIntersect(filter.negative, candidates)) {
     return false;
   }
-  if ((!requirePositiveMatches || candidates.length > 0) && arraysIntersect(filter.positive, candidates)) {
+  if ((filter.positive.length === 0 || candidates.length > 0) && arraysIntersect(filter.positive, candidates)) {
     return true;
   }
 
