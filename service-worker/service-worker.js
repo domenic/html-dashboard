@@ -4,7 +4,7 @@ const parseLinkHeader = require("parse-link-header");
 const gitHub = require("./github.js");
 const config = require("../config.json");
 
-const CACHE_NAME = "v1";
+const CACHE_NAME = "v2";
 
 swToolbox.router.get("/issues.json", request => {
   const accessToken = (new URL(request.url)).searchParams.get("token");
@@ -30,7 +30,7 @@ function fetchAndCache(fetcher, request, accessToken) {
 }
 
 function fetchIssues(accessToken) {
-  return gitHub(`repos/${config.repo}/issues`, accessToken).then(firstResponse => {
+  return gitHub(`repos/${config.repo}/issues?state=all`, accessToken).then(firstResponse => {
     const links = parseLinkHeader(firstResponse.headers.get("link"));
     const nextPage = Number(links.next.page);
     const lastPage = Number(links.last.page);
