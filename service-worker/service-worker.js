@@ -7,15 +7,21 @@ const config = require("../config.json");
 const CACHE_NAME = "v1";
 
 swToolbox.router.get("/issues.json", request => {
-  const search = (new URL(request.url)).search.substring("?".length);
-  const accessToken = (new URLSearchParams(search)).get("token");
+  const accessToken = (new URL(request.url)).searchParams.get("token");
 
   return caches.match(request)
-    .then(res => res || fetchAndCacheIssues(request, accessToken));
+    .then(res => res || fetchAndCache(fetchIssues, request, accessToken));
 });
 
-function fetchAndCacheIssues(request, accessToken) {
-  return fetchIssues(accessToken).then(response =>
+swToolbox.router.get("/user.json", request => {
+  const accessToken = (new URL(request.url)).searchParams.get("token");
+
+  return caches.match(request)
+    .then(res => res || fetchAndCache(fetchUser, request, accessToken));
+});
+
+function fetchAndCache(fetcher, request, accessToken) {
+  return fetcher(accessToken).then(response =>
     caches.open(CACHE_NAME).then(cache => {
       cache.put(request, response.clone());
       return response;
@@ -42,6 +48,10 @@ function fetchIssues(accessToken) {
     return Promise.all(jsonPromises);
   })
   .then(jsons => jsonResponse(flattenArray(jsons)));
+}
+
+function fetchUser(accessToken) {
+  return gitHub("user", accessToken);
 }
 
 function jsonResponse(obj) {

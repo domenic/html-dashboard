@@ -7,7 +7,9 @@ module.exports = function gitHubRequest(pathOrURL, token) {
 
   return fetch(pathOrURL, {
     headers: {
-      Authorization: "token " + token
+      Authorization: "token " + token,
+      // https://developer.github.com/changes/2016-5-27-multiple-assignees/
+      Accept: "application/vnd.github.cerberus-preview"
     }
   });
 };

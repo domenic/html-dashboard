@@ -6,7 +6,8 @@
 const filters = {
   is: issueMatchesIs,
   label: issueMatchesLabel,
-  no: issueMatchesNo
+  no: issueMatchesNo,
+  assignee: issueMatchesAssignee
 };
 
 exports.filter = (issues, filterString) => {
@@ -33,21 +34,24 @@ function issueMatchesIs(issue, isFilter) {
 function issueMatchesIsType(issue, isFilter) {
   const isPR = Boolean(issue.pull_request);
 
-  if (isPR && isFilter.negative.includes("pr")) {
+  const negative = isFilter.negative.filter(value => value === "pr" || value === "issue");
+  const positive = isFilter.positive.filter(value => value === "pr" || value === "issue");
+
+  if (isPR && negative.includes("pr")) {
     return false;
   }
-  if (!isPR && isFilter.negative.includes("issue")) {
+  if (!isPR && negative.includes("issue")) {
     return false;
   }
 
-  if (isPR && isFilter.positive.includes("pr")) {
+  if (isPR && positive.includes("pr")) {
     return true;
   }
-  if (!isPR && isFilter.positive.includes("issue")) {
+  if (!isPR && positive.includes("issue")) {
     return true;
   }
 
-  return false;
+  return negative.length === 0 && positive.length === 0;
 }
 
 function issueMatchesIsState(issue, isFilter) {
@@ -65,16 +69,8 @@ function issueMatchesIsState(issue, isFilter) {
 }
 
 function issueMatchesLabel(issue, labelFilter) {
-  const issueLabels = issue.labels.map(obj => obj.name);
-
-  if (labelFilter.negative.length > 0 && issueLabels.length > 0 && arraysIntersect(labelFilter.negative, issueLabels)) {
-    return false;
-  }
-  if (arraysIntersect(labelFilter.positive, issueLabels)) {
-    return true;
-  }
-
-  return false;
+  const labels = issue.labels.map(obj => obj.name);
+  return multipleMatcherHelper(labels, labelFilter, { requirePositiveMatches: false });
 }
 
 function issueMatchesNo(issue, noFilter) {
@@ -89,6 +85,23 @@ function issueMatchesNo(issue, noFilter) {
   }
 
   return true;
+}
+
+function issueMatchesAssignee(issue, assigneeFilter) {
+  const assignees = issue.assignees.map(obj => obj.login);
+  console.log("assignees", assignees);
+  return multipleMatcherHelper(assignees, assigneeFilter, { requirePositiveMatches: true });
+}
+
+function multipleMatcherHelper(candidates, filter, { requirePositiveMatches }) {
+  if (filter.negative.length > 0 && candidates.length > 0 && arraysIntersect(filter.negative, candidates)) {
+    return false;
+  }
+  if ((!requirePositiveMatches || candidates.length > 0) && arraysIntersect(filter.positive, candidates)) {
+    return true;
+  }
+
+  return false;
 }
 
 function parseFilter(filterString) {

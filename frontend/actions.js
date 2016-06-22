@@ -37,10 +37,13 @@ exports.signInToGitHub = () =>
                 "width=1038,height=650,status=no,resizable=yes,toolbar=no,menubar=no,scrollbars=yes");
   };
 
-function issuesLoaded(issuesData) {
+function issuesLoaded(issuesData, userData) {
   return {
     type: "issues loaded",
-    data: issuesData
+    data: {
+      issues: issuesData,
+      username: userData.login
+    }
   };
 }
 
@@ -48,8 +51,10 @@ exports.loadIssues = () =>
   (dispatch, getState) => {
     const accessToken = getState().gitHub.accessToken;
 
-    return fetch("/issues.json?token=" + accessToken)
-      .then(res => res.json())
-      .then(result => dispatch(issuesLoaded(result)));
+    return Promise.all([
+      fetch("/issues.json?token=" + accessToken).then(res => res.json()),
+      fetch("/user.json?token=" + accessToken).then(res => res.json())
+    ])
+    .then(([issuesData, userData]) => dispatch(issuesLoaded(issuesData, userData)));
     // TODO error handling
   };

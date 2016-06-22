@@ -5,7 +5,15 @@ const filterIssues = require("../issues.js").filter;
 const config = require("../../config.json");
 
 module.exports = ({ issues, filter, description }) => {
-  const filteredIssues = filterIssues(issues, filter);
+  const filteredIssues = filterIssues(issues, filter).sort((a, b) => {
+    if (a.pull_request && !b.pull_request) {
+      return -1;
+    }
+    if (!a.pull_request && b.pull_request) {
+      return 1;
+    }
+    return 0;
+  });
 
   function getLabelURL(labelName) {
     return `https://github.com/${config.repo}/issues?q=${encodeURIComponent(filter + " label:\"" + labelName + "\"")}`;

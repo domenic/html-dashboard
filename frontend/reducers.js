@@ -12,6 +12,7 @@ function gitHub(state, action) {
   if (state === undefined) {
     return {
       signingIn: false,
+      username: null,
       accessToken: cookies.get(config.gitHub.cookie)
     };
   }
@@ -20,6 +21,7 @@ function gitHub(state, action) {
     case "begin GitHub sign in": {
       return Object.assign({}, state, {
         signingIn: true,
+        username: null,
         accessToken: null
       });
     }
@@ -27,7 +29,14 @@ function gitHub(state, action) {
     case "receive GitHub access token": {
       return Object.assign({}, state, {
         signingIn: false,
+        username: null,
         accessToken: action.accessToken
+      });
+    }
+
+    case "issues loaded": {
+      return Object.assign({}, state, {
+        username: action.data.username
       });
     }
 
@@ -45,7 +54,7 @@ function issues(state, action) {
 
   switch (action.type) {
     case "issues loaded": {
-      return action.data;
+      return action.data.issues;
     }
 
     default: {
