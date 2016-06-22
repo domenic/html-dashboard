@@ -7,7 +7,9 @@ const filters = {
   is: issueMatchesIs,
   label: issueMatchesLabel,
   no: issueMatchesNo,
-  assignee: issueMatchesAssignee
+  assignee: issueMatchesAssignee,
+  comments: issueMatchesComments,
+  author: issueMatchesAuthor
 };
 
 exports.filter = (issues, filterString) => {
@@ -89,8 +91,32 @@ function issueMatchesNo(issue, noFilter) {
 
 function issueMatchesAssignee(issue, assigneeFilter) {
   const assignees = issue.assignees.map(obj => obj.login);
-  console.log("assignees", assignees);
   return multipleMatcherHelper(assignees, assigneeFilter);
+}
+
+function issueMatchesComments(issue, commentsFilter) {
+  const numComments = issue.comments;
+
+  // Only support numbers for now, not >50 or 10..100 syntax
+  for (const pos of commentsFilter.positive) {
+    if (numComments !== Number(pos)) {
+      return false;
+    }
+  }
+
+  for (const neg of commentsFilter.negative) {
+    if (numComments === Number(neg)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function issueMatchesAuthor(issue, authorFilter) {
+  const author = issue.user.login;
+  // NOTE: GitHub does *not* appear to work this way for author...
+  return multipleMatcherHelper([author], authorFilter);
 }
 
 function multipleMatcherHelper(candidates, filter) {

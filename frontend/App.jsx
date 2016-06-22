@@ -34,6 +34,9 @@ class App extends React.Component {
               <IssueList issues={issues}
                          description="Additions/proposals"
                          filter={`is:issue is:open label:addition/proposal`} />
+              <IssueList issues={issues}
+                         description="No responses, filed by a non-editor" // NOTE: GitHub search semantics are broken here
+                         filter={`is:issue is:open comments:0 -author:annevk -author:domenic -author:foolip -author:zcorpan`} />
             </div>
           :
           <p className="sign-in-reminder">Sign in (click the button in the upper right) to see the dashboard.</p>

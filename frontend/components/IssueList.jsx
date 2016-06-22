@@ -12,7 +12,7 @@ module.exports = ({ issues, filter, description }) => {
     if (!a.pull_request && b.pull_request) {
       return 1;
     }
-    return 0;
+    return b.created_at.localeCompare(a.created_at);
   });
 
   function getLabelURL(labelName) {
