@@ -3,7 +3,7 @@ const React = require("react");
 const Colr = require("colr");
 const relativeDate = require("relative-date");
 
-module.exports = ({ issue, getLabelURL }) => (
+module.exports = ({ issue, getLabelURL, getAssigneeURL }) => (
   <li className="issue">
     <a className="title" href={issue.html_url}>{issue.title}</a>
 
@@ -23,6 +23,18 @@ module.exports = ({ issue, getLabelURL }) => (
       datetime={issue.created_at} title={issue.created_at}>{relativeDate(new Date(issue.created_at))}</time> by <a
       className="creator" href={issue.user.html_url}>{issue.user.login}</a>
     </p>
+
+    <ul className="assignees">
+      {
+        issue.assignees.map(assignee => (
+          <li key={assignee.login}>
+            <a href={getAssigneeURL(assignee.login)} title={`View everything assigned to ${assignee.login}`}>
+              <img alt={`@${assignee.login}`} height="20" width="20" src={`${assignee.avatar_url}&s=40`}/>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </li>
 );
 

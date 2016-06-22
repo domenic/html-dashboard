@@ -26,9 +26,13 @@ module.exports = ({ issues, filter, description }) => {
 
       <ol className="issue-container">
       {
-        filteredIssues.map(issue => <Issue key={issue.id} issue={issue} getLabelURL={getLabelURL} />)
+        filteredIssues.map(issue => <Issue key={issue.id} issue={issue} getLabelURL={getLabelURL} getAssigneeURL={getAssigneeURL} />)
       }
       </ol>
     </article>
   );
 };
+
+function getAssigneeURL(assigneeUsername) {
+  return `https://github.com/issues?q=${encodeURIComponent("assignee:" + assigneeUsername + " is:open")}`;
+}
