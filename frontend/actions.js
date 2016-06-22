@@ -34,7 +34,7 @@ exports.signInToGitHub = () =>
     };
 
     window.open(gitHubOauthURL, "OAuth",
-                "width=525,height=525,status=no,resizable=yes,toolbar=no,menubar=no,scrollbars=yes");
+                "width=1038,height=650,status=no,resizable=yes,toolbar=no,menubar=no,scrollbars=yes");
   };
 
 function issuesLoaded(issuesData) {
